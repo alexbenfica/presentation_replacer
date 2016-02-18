@@ -52,9 +52,11 @@ class pptRep():
                 if not shape.has_text_frame: continue
                 for paragraph in shape.text_frame.paragraphs:
                     for run in paragraph.runs:
-                        pp.pprint(run.text)
-                        # replaces if fould, leave it if not found!
-                        run.text = self.getReplace(run.text)
+                        if '{' in run.text:
+                            if '}' in run.text:
+                                pp.pprint(run.text)
+                                # replaces if fould, leave it if not found!
+                                run.text = self.getReplace(run.text)
                         
 
 if __name__ == "__main__":    
