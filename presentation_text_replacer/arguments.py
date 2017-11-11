@@ -1,4 +1,3 @@
-#!/usr/bin/python -tt
 # -*- coding: utf-8 -*-
 import os
 import argparse

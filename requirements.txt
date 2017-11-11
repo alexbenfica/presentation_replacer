@@ -1,0 +1,4 @@
+pprint
+argparse
+python-pptx
+ConfigParser

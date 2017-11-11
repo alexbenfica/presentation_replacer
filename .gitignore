@@ -1,5 +1,5 @@
-nbproject
 .project
 .pydevproject
 *.pyc
-data/
+.idea/
+*.egg-info
