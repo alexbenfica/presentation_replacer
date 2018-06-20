@@ -1,15 +1,20 @@
-# -*- coding: utf-8 -*-
-from pptx import Presentation
-import pprint as pp
-import ConfigParser    
+"""
+Replace a list of text strings on presentations
+"""
 import os
 import sys
+import pprint as pp
+import configparser
 
-from arguments import *
-
+from pptx import Presentation
 
 class pptRep():
     def __init__(self, inFile, outfile, repFile):
+        """
+        :param inFile: Input presentation file
+        :param outfile: Output presentation file.
+        :param repFile: Txt (ini format) file with strings to be replaced
+        """
         inFile = os.path.abspath(inFile)                
         if not os.path.isfile(inFile):
             exit('Input file does not exists: %s' % inFile)        
@@ -17,12 +22,12 @@ class pptRep():
         self.loadReplaceFile(repFile)
         self.doReplaces()
         self.savePres(outfile)
-    
+
     def loadReplaceFile(self, repFile):
         repFile = os.path.abspath(repFile)                
         if not os.path.isfile(repFile):        
-            exit('File with string to replace doesnot exists: %s' % repFile)                    
-        self.cp = ConfigParser.ConfigParser()                
+            exit('File with string to replace does not exists: %s' % repFile)
+        self.cp = configparser.ConfigParser()
         self.cp.read(repFile)                    
 
     # retrieves a configuration value from config. file or the same text if it is not found
@@ -45,7 +50,7 @@ class pptRep():
     
     def doReplaces(self):        
         '''
-        Replaces each ocurrence of text inside presentation file.
+        Replaces each occurrence of text inside presentation file.
         '''
         for slide in self.prs.slides:
             for shape in slide.shapes:

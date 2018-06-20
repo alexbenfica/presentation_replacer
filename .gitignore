@@ -3,3 +3,5 @@
 *.pyc
 .idea/
 *.egg-info
+venv_presentation_text_replacer
+test_data

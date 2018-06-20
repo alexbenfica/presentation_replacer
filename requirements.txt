@@ -1,4 +1,3 @@
 pprint
-argparse
 python-pptx
-ConfigParser
+configparser
