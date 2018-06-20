@@ -1,1 +1,1 @@
-from .presentation_text_replacer import pptRep
+from .presentation_text_replacer import PptRep

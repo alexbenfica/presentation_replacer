@@ -8,47 +8,51 @@ import configparser
 
 from pptx import Presentation
 
-class pptRep():
-    def __init__(self, inFile, outfile, repFile):
+class PptRep():
+    def __init__(self, input_file, output_file, replacer_file):
         """
-        :param inFile: Input presentation file
-        :param outfile: Output presentation file.
-        :param repFile: Txt (ini format) file with strings to be replaced
+        :param input_file: Input presentation file
+        :param output_file: Output presentation file.
+        :param replacer_file: Txt (ini format) file with strings to be replaced
         """
-        inFile = os.path.abspath(inFile)                
-        if not os.path.isfile(inFile):
-            exit('Input file does not exists: %s' % inFile)        
-        self.prs = Presentation(inFile)        
-        self.loadReplaceFile(repFile)
-        self.doReplaces()
-        self.savePres(outfile)
+        input_file = os.path.abspath(input_file)
+        if not os.path.isfile(input_file):
+            exit('Input file does not exists: %s' % input_file)
+        self.input_file = input_file
+        self.output_file = output_file
+        self.replacer_file = replacer_file
 
-    def loadReplaceFile(self, repFile):
-        repFile = os.path.abspath(repFile)                
-        if not os.path.isfile(repFile):        
-            exit('File with string to replace does not exists: %s' % repFile)
+    def process_file(self):
+        self.prs = Presentation(self.input_file)
+        self._load_replace_file()
+        self._replace_inside_file()
+        self._save_presentation_file()
+
+    def _load_replace_file(self):
+        f = os.path.abspath(self.replacer_file)
+        if not os.path.isfile(f):
+            exit('File with string to replace does not exists: %s' % self.replacer_file)
         self.cp = configparser.ConfigParser()
-        self.cp.read(repFile)                    
+        self.cp.read(f)
 
     # retrieves a configuration value from config. file or the same text if it is not found
-    def getReplace(self, txtToReplace):
+    def _get_replace(self, text_to_replace):
         # the section name does not matter. use the first
         if len(self.cp.sections()):
             section = self.cp.sections()[0]
 
-        searchTxt = txtToReplace.replace('{','').replace('}','').strip()
-        if self.cp.has_option(section, searchTxt):
-            rep = self.cp.get(section, searchTxt)            
+        search_text = text_to_replace.replace('{', '').replace('}', '').strip()
+        if self.cp.has_option(section, search_text):
+            rep = self.cp.get(section, search_text)
             return rep
         
-        return txtToReplace
+        return text_to_replace
         
-    def savePres(self, outputFile):
-        outputFile = os.path.abspath(outputFile)                
-        self.prs.save(outputFile)
+    def _save_presentation_file(self):
+        self.prs.save(self.output_file)
         
     
-    def doReplaces(self):        
+    def _replace_inside_file(self):
         '''
         Replaces each occurrence of text inside presentation file.
         '''
@@ -61,4 +65,4 @@ class pptRep():
                             if '}' in run.text:
                                 pp.pprint(run.text)
                                 # replaces if fould, leave it if not found!
-                                run.text = self.getReplace(run.text)
+                                run.text = self._get_replace(run.text)
